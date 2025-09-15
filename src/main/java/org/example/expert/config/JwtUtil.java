@@ -37,7 +37,7 @@ public class JwtUtil {
     public String createToken(Long userId, String email, UserRole userRole) {
         Date date = new Date();
 
-        return BEARER_PREFIX +
+        return BEARER_PREFIX +    // 토큰 생성 후 응답 시 Bearer 접두어가 붙어서 반환
                 Jwts.builder()
                         .setSubject(String.valueOf(userId))
                         .claim("email", email)
