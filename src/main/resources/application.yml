@@ -16,3 +16,10 @@ jwt:
   secret:
     key: "c2VjdXJlMTIzNDU2c2VjdXJlMTIzNDU2c2VjdXJlMTIzNDU2c2VjdXJlMTIzNDU2"    # 원하는 시크릿 키 입력(MySuperSecretKey를 Encode)
   expiration: 1800                                                             # 만료 시간(30분)
+
+# 에러 로깅
+logging:
+  level:
+    root: INFO                                                                 # 기본 로그는 INFO 이상 찍히게
+    org.springframework.web: DEBUG
+    org.hibernate: DEBUG
