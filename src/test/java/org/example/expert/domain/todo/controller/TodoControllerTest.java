@@ -69,9 +69,12 @@ class TodoControllerTest {
 
         // then
         mockMvc.perform(get("/todos/{todoId}", todoId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
-                .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                // 실패 시 GlobalExceptionHandler의 invalidRequestExceptionException를 통해 BAD_REQUEST 반환해야함
+                // 200 반환 코드로 인해 오류 발생
+                // .andExpect(status().isOk())
+                // .andExpect(jsonPath("$.status").value(HttpStatus.OK.name()))
+                // .andExpect(jsonPath("$.code").value(HttpStatus.OK.value()))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Todo not found"));
     }
 }
