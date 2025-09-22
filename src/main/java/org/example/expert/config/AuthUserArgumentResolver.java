@@ -7,6 +7,8 @@ import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.user.enums.UserRole;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -34,6 +36,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             @Nullable WebDataBinderFactory binderFactory
     ) {
+        /*
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         // JwtFilter 에서 set 한 userId, email, userRole 값을 가져옴
@@ -42,5 +45,14 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
         UserRole userRole = UserRole.of((String) request.getAttribute("userRole"));
 
         return new AuthUser(userId, email, userRole);
+        */
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null) {
+            throw new AuthException("인증 정보가 없습니다.");
+        }
+
+        return authentication.getPrincipal();
     }
 }
