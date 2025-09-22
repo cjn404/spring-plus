@@ -1,3 +1,4 @@
+/*
 package org.example.expert.config;
 
 import lombok.RequiredArgsConstructor;
@@ -20,3 +21,4 @@ public class FilterConfig {
         return registrationBean;
     }
 }
+*/
