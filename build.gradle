@@ -59,7 +59,7 @@ tasks.named('test') {
 }
 
 // QueryDSL 빌드 옵션
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "$buildDir/generated/sources/annotationProcessor/java/main"
 
 sourceSets {
     main.java.srcDirs += [ querydslDir ]
