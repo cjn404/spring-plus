@@ -6,7 +6,6 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.service.TodoService;
 import org.example.expert.domain.user.dto.response.UserResponse;
-import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,15 +31,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TodoController.class)
+// Spring Security 필터 미적용
+// -> JWT 인증 없이 단위 테스트
 @AutoConfigureMockMvc(addFilters = false)
 class TodoControllerTest {
 
+    // 테스트용 추가 설정 빈 정의
     @TestConfiguration
     static class TestConfig {
 
+        // 실제 JWT 필터 대신 Mock 주입
         @MockBean
         private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+        // 컨트롤러 메서드에서 테스트용 Mock AuthUser 객체 주입
         @Bean
         public HandlerMethodArgumentResolver authUserArgumentResolver() {
             return new HandlerMethodArgumentResolver() {
@@ -67,6 +70,8 @@ class TodoControllerTest {
     @MockBean
     private TodoService todoService;
 
+    // 테스트 후 Spring Security 초기화
+    // 이전 테스트 인증 정보가 남아있으면, 다른 테스트에 영향을 줄 수 있기 때문
     @AfterEach
     void tearDown() {
         SecurityContextHolder.clearContext();
@@ -77,15 +82,11 @@ class TodoControllerTest {
         // given
         long todoId = 1L;
         String title = "title";
-//        AuthUser authUser = new AuthUser(1L, "email", UserRole.ROLE_USER);
-//        User user = User.fromAuthUser(authUser);
-//        UserResponse userResponse = new UserResponse(user.getId(), user.getEmail());
         TodoResponse response = new TodoResponse(
                 todoId,
                 title,
                 "contents",
                 "Sunny",
-//                userResponse,
                 new UserResponse(1L, "test@email.com"),
                 LocalDateTime.now(),
                 LocalDateTime.now()
